@@ -1,0 +1,25 @@
+name: security-checks
+on: [push, pull_request]
+
+jobs:
+  sast-and-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install tools
+        run: pip install bandit pip-audit
+
+      - name: SAST (Bandit)
+        run: bandit -r . -ll # -ll: показывать проблемы уровня MEDIUM и выше
+
+      - name: Dependency scan (pip-audit)
+        run: pip-audit || true # не валим сборку на первом занятии
+
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
