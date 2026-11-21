@@ -1,12 +1,16 @@
-# app.py — учебный файл с уязвимостями
-import hashlib, subprocess, os
+# app.py — исправленный безопасный файл
+import hashlib
+import os
+import subprocess
 
-API_KEY = "sk_live_9f3b2a7c41e8d6"  # зашитый секрет
+# Секрет удален из кода
 
 
 def run(cmd):
-  return subprocess.call(cmd, shell=True)  # shell=True — инъекция команд
+  # Убран shell=True, передаем команду как список аргументов
+  return subprocess.call(cmd)
 
 
 def weak_hash(p):
-  return hashlib.md5(p.encode()).hexdigest()  # слабый хэш MD5
+  # Заменили слабый MD5 на безопасный SHA-256
+  return hashlib.sha256(p.encode()).hexdigest()
